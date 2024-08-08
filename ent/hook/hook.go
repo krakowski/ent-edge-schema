@@ -9,16 +9,64 @@ import (
 	"entgo.io/bug/ent"
 )
 
-// The UserFunc type is an adapter to allow the use of ordinary
-// function as User mutator.
-type UserFunc func(context.Context, *ent.UserMutation) (ent.Value, error)
+// The AddressFunc type is an adapter to allow the use of ordinary
+// function as Address mutator.
+type AddressFunc func(context.Context, *ent.AddressMutation) (ent.Value, error)
 
 // Mutate calls f(ctx, m).
-func (f UserFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
-	if mv, ok := m.(*ent.UserMutation); ok {
+func (f AddressFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.AddressMutation); ok {
 		return f(ctx, mv)
 	}
-	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.UserMutation", m)
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.AddressMutation", m)
+}
+
+// The CompanyFunc type is an adapter to allow the use of ordinary
+// function as Company mutator.
+type CompanyFunc func(context.Context, *ent.CompanyMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CompanyFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.CompanyMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CompanyMutation", m)
+}
+
+// The CompanyAddressFunc type is an adapter to allow the use of ordinary
+// function as CompanyAddress mutator.
+type CompanyAddressFunc func(context.Context, *ent.CompanyAddressMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f CompanyAddressFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.CompanyAddressMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.CompanyAddressMutation", m)
+}
+
+// The EmployeeFunc type is an adapter to allow the use of ordinary
+// function as Employee mutator.
+type EmployeeFunc func(context.Context, *ent.EmployeeMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f EmployeeFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.EmployeeMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EmployeeMutation", m)
+}
+
+// The EmployeeAddressFunc type is an adapter to allow the use of ordinary
+// function as EmployeeAddress mutator.
+type EmployeeAddressFunc func(context.Context, *ent.EmployeeAddressMutation) (ent.Value, error)
+
+// Mutate calls f(ctx, m).
+func (f EmployeeAddressFunc) Mutate(ctx context.Context, m ent.Mutation) (ent.Value, error) {
+	if mv, ok := m.(*ent.EmployeeAddressMutation); ok {
+		return f(ctx, mv)
+	}
+	return nil, fmt.Errorf("unexpected mutation type %T. expect *ent.EmployeeAddressMutation", m)
 }
 
 // Condition is a hook condition function.

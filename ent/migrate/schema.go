@@ -8,23 +8,132 @@ import (
 )
 
 var (
-	// UsersColumns holds the columns for the "users" table.
-	UsersColumns = []*schema.Column{
+	// AddressesColumns holds the columns for the "addresses" table.
+	AddressesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "age", Type: field.TypeInt},
+		{Name: "street", Type: field.TypeString},
+		{Name: "house_number", Type: field.TypeString},
+		{Name: "postal_code", Type: field.TypeString},
+		{Name: "city", Type: field.TypeString},
+	}
+	// AddressesTable holds the schema information for the "addresses" table.
+	AddressesTable = &schema.Table{
+		Name:       "addresses",
+		Columns:    AddressesColumns,
+		PrimaryKey: []*schema.Column{AddressesColumns[0]},
+	}
+	// CompaniesColumns holds the columns for the "companies" table.
+	CompaniesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
 	}
-	// UsersTable holds the schema information for the "users" table.
-	UsersTable = &schema.Table{
-		Name:       "users",
-		Columns:    UsersColumns,
-		PrimaryKey: []*schema.Column{UsersColumns[0]},
+	// CompaniesTable holds the schema information for the "companies" table.
+	CompaniesTable = &schema.Table{
+		Name:       "companies",
+		Columns:    CompaniesColumns,
+		PrimaryKey: []*schema.Column{CompaniesColumns[0]},
+	}
+	// CompanyAddressesColumns holds the columns for the "company_addresses" table.
+	CompanyAddressesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "company_id", Type: field.TypeInt},
+		{Name: "address_id", Type: field.TypeInt},
+	}
+	// CompanyAddressesTable holds the schema information for the "company_addresses" table.
+	CompanyAddressesTable = &schema.Table{
+		Name:       "company_addresses",
+		Columns:    CompanyAddressesColumns,
+		PrimaryKey: []*schema.Column{CompanyAddressesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "company_addresses_companies_company",
+				Columns:    []*schema.Column{CompanyAddressesColumns[1]},
+				RefColumns: []*schema.Column{CompaniesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "company_addresses_addresses_address",
+				Columns:    []*schema.Column{CompanyAddressesColumns[2]},
+				RefColumns: []*schema.Column{AddressesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "companyaddress_company_id",
+				Unique:  true,
+				Columns: []*schema.Column{CompanyAddressesColumns[1]},
+			},
+			{
+				Name:    "companyaddress_address_id_company_id",
+				Unique:  true,
+				Columns: []*schema.Column{CompanyAddressesColumns[2], CompanyAddressesColumns[1]},
+			},
+		},
+	}
+	// EmployeesColumns holds the columns for the "employees" table.
+	EmployeesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "firstname", Type: field.TypeString},
+		{Name: "lastname", Type: field.TypeString},
+	}
+	// EmployeesTable holds the schema information for the "employees" table.
+	EmployeesTable = &schema.Table{
+		Name:       "employees",
+		Columns:    EmployeesColumns,
+		PrimaryKey: []*schema.Column{EmployeesColumns[0]},
+	}
+	// EmployeeAddressesColumns holds the columns for the "employee_addresses" table.
+	EmployeeAddressesColumns = []*schema.Column{
+		{Name: "id", Type: field.TypeInt, Increment: true},
+		{Name: "employee_id", Type: field.TypeInt},
+		{Name: "address_id", Type: field.TypeInt},
+	}
+	// EmployeeAddressesTable holds the schema information for the "employee_addresses" table.
+	EmployeeAddressesTable = &schema.Table{
+		Name:       "employee_addresses",
+		Columns:    EmployeeAddressesColumns,
+		PrimaryKey: []*schema.Column{EmployeeAddressesColumns[0]},
+		ForeignKeys: []*schema.ForeignKey{
+			{
+				Symbol:     "employee_addresses_companies_company",
+				Columns:    []*schema.Column{EmployeeAddressesColumns[1]},
+				RefColumns: []*schema.Column{CompaniesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+			{
+				Symbol:     "employee_addresses_addresses_address",
+				Columns:    []*schema.Column{EmployeeAddressesColumns[2]},
+				RefColumns: []*schema.Column{AddressesColumns[0]},
+				OnDelete:   schema.NoAction,
+			},
+		},
+		Indexes: []*schema.Index{
+			{
+				Name:    "employeeaddress_employee_id",
+				Unique:  true,
+				Columns: []*schema.Column{EmployeeAddressesColumns[1]},
+			},
+			{
+				Name:    "employeeaddress_address_id_employee_id",
+				Unique:  true,
+				Columns: []*schema.Column{EmployeeAddressesColumns[2], EmployeeAddressesColumns[1]},
+			},
+		},
 	}
 	// Tables holds all the tables in the schema.
 	Tables = []*schema.Table{
-		UsersTable,
+		AddressesTable,
+		CompaniesTable,
+		CompanyAddressesTable,
+		EmployeesTable,
+		EmployeeAddressesTable,
 	}
 )
 
 func init() {
+	CompanyAddressesTable.ForeignKeys[0].RefTable = CompaniesTable
+	CompanyAddressesTable.ForeignKeys[1].RefTable = AddressesTable
+	EmployeeAddressesTable.ForeignKeys[0].RefTable = CompaniesTable
+	EmployeeAddressesTable.ForeignKeys[1].RefTable = AddressesTable
 }

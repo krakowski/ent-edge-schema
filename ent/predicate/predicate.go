@@ -6,5 +6,17 @@ import (
 	"entgo.io/ent/dialect/sql"
 )
 
-// User is the predicate function for user builders.
-type User func(*sql.Selector)
+// Address is the predicate function for address builders.
+type Address func(*sql.Selector)
+
+// Company is the predicate function for company builders.
+type Company func(*sql.Selector)
+
+// CompanyAddress is the predicate function for companyaddress builders.
+type CompanyAddress func(*sql.Selector)
+
+// Employee is the predicate function for employee builders.
+type Employee func(*sql.Selector)
+
+// EmployeeAddress is the predicate function for employeeaddress builders.
+type EmployeeAddress func(*sql.Selector)

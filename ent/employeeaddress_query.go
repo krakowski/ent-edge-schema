@@ -8,7 +8,7 @@ import (
 	"math"
 
 	"entgo.io/bug/ent/address"
-	"entgo.io/bug/ent/company"
+	"entgo.io/bug/ent/employee"
 	"entgo.io/bug/ent/employeeaddress"
 	"entgo.io/bug/ent/predicate"
 	"entgo.io/ent"
@@ -20,12 +20,12 @@ import (
 // EmployeeAddressQuery is the builder for querying EmployeeAddress entities.
 type EmployeeAddressQuery struct {
 	config
-	ctx         *QueryContext
-	order       []employeeaddress.OrderOption
-	inters      []Interceptor
-	predicates  []predicate.EmployeeAddress
-	withCompany *CompanyQuery
-	withAddress *AddressQuery
+	ctx          *QueryContext
+	order        []employeeaddress.OrderOption
+	inters       []Interceptor
+	predicates   []predicate.EmployeeAddress
+	withEmployee *EmployeeQuery
+	withAddress  *AddressQuery
 	// intermediate query (i.e. traversal path).
 	sql  *sql.Selector
 	path func(context.Context) (*sql.Selector, error)
@@ -62,9 +62,9 @@ func (eaq *EmployeeAddressQuery) Order(o ...employeeaddress.OrderOption) *Employ
 	return eaq
 }
 
-// QueryCompany chains the current query on the "company" edge.
-func (eaq *EmployeeAddressQuery) QueryCompany() *CompanyQuery {
-	query := (&CompanyClient{config: eaq.config}).Query()
+// QueryEmployee chains the current query on the "employee" edge.
+func (eaq *EmployeeAddressQuery) QueryEmployee() *EmployeeQuery {
+	query := (&EmployeeClient{config: eaq.config}).Query()
 	query.path = func(ctx context.Context) (fromU *sql.Selector, err error) {
 		if err := eaq.prepareQuery(ctx); err != nil {
 			return nil, err
@@ -75,8 +75,8 @@ func (eaq *EmployeeAddressQuery) QueryCompany() *CompanyQuery {
 		}
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employeeaddress.Table, employeeaddress.FieldID, selector),
-			sqlgraph.To(company.Table, company.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, employeeaddress.CompanyTable, employeeaddress.CompanyColumn),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, employeeaddress.EmployeeTable, employeeaddress.EmployeeColumn),
 		)
 		fromU = sqlgraph.SetNeighbors(eaq.driver.Dialect(), step)
 		return fromU, nil
@@ -293,27 +293,27 @@ func (eaq *EmployeeAddressQuery) Clone() *EmployeeAddressQuery {
 		return nil
 	}
 	return &EmployeeAddressQuery{
-		config:      eaq.config,
-		ctx:         eaq.ctx.Clone(),
-		order:       append([]employeeaddress.OrderOption{}, eaq.order...),
-		inters:      append([]Interceptor{}, eaq.inters...),
-		predicates:  append([]predicate.EmployeeAddress{}, eaq.predicates...),
-		withCompany: eaq.withCompany.Clone(),
-		withAddress: eaq.withAddress.Clone(),
+		config:       eaq.config,
+		ctx:          eaq.ctx.Clone(),
+		order:        append([]employeeaddress.OrderOption{}, eaq.order...),
+		inters:       append([]Interceptor{}, eaq.inters...),
+		predicates:   append([]predicate.EmployeeAddress{}, eaq.predicates...),
+		withEmployee: eaq.withEmployee.Clone(),
+		withAddress:  eaq.withAddress.Clone(),
 		// clone intermediate query.
 		sql:  eaq.sql.Clone(),
 		path: eaq.path,
 	}
 }
 
-// WithCompany tells the query-builder to eager-load the nodes that are connected to
-// the "company" edge. The optional arguments are used to configure the query builder of the edge.
-func (eaq *EmployeeAddressQuery) WithCompany(opts ...func(*CompanyQuery)) *EmployeeAddressQuery {
-	query := (&CompanyClient{config: eaq.config}).Query()
+// WithEmployee tells the query-builder to eager-load the nodes that are connected to
+// the "employee" edge. The optional arguments are used to configure the query builder of the edge.
+func (eaq *EmployeeAddressQuery) WithEmployee(opts ...func(*EmployeeQuery)) *EmployeeAddressQuery {
+	query := (&EmployeeClient{config: eaq.config}).Query()
 	for _, opt := range opts {
 		opt(query)
 	}
-	eaq.withCompany = query
+	eaq.withEmployee = query
 	return eaq
 }
 
@@ -407,7 +407,7 @@ func (eaq *EmployeeAddressQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 		nodes       = []*EmployeeAddress{}
 		_spec       = eaq.querySpec()
 		loadedTypes = [2]bool{
-			eaq.withCompany != nil,
+			eaq.withEmployee != nil,
 			eaq.withAddress != nil,
 		}
 	)
@@ -429,9 +429,9 @@ func (eaq *EmployeeAddressQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	if len(nodes) == 0 {
 		return nodes, nil
 	}
-	if query := eaq.withCompany; query != nil {
-		if err := eaq.loadCompany(ctx, query, nodes, nil,
-			func(n *EmployeeAddress, e *Company) { n.Edges.Company = e }); err != nil {
+	if query := eaq.withEmployee; query != nil {
+		if err := eaq.loadEmployee(ctx, query, nodes, nil,
+			func(n *EmployeeAddress, e *Employee) { n.Edges.Employee = e }); err != nil {
 			return nil, err
 		}
 	}
@@ -444,7 +444,7 @@ func (eaq *EmployeeAddressQuery) sqlAll(ctx context.Context, hooks ...queryHook)
 	return nodes, nil
 }
 
-func (eaq *EmployeeAddressQuery) loadCompany(ctx context.Context, query *CompanyQuery, nodes []*EmployeeAddress, init func(*EmployeeAddress), assign func(*EmployeeAddress, *Company)) error {
+func (eaq *EmployeeAddressQuery) loadEmployee(ctx context.Context, query *EmployeeQuery, nodes []*EmployeeAddress, init func(*EmployeeAddress), assign func(*EmployeeAddress, *Employee)) error {
 	ids := make([]int, 0, len(nodes))
 	nodeids := make(map[int][]*EmployeeAddress)
 	for i := range nodes {
@@ -457,7 +457,7 @@ func (eaq *EmployeeAddressQuery) loadCompany(ctx context.Context, query *Company
 	if len(ids) == 0 {
 		return nil
 	}
-	query.Where(company.IDIn(ids...))
+	query.Where(employee.IDIn(ids...))
 	neighbors, err := query.All(ctx)
 	if err != nil {
 		return err
@@ -528,7 +528,7 @@ func (eaq *EmployeeAddressQuery) querySpec() *sqlgraph.QuerySpec {
 				_spec.Node.Columns = append(_spec.Node.Columns, fields[i])
 			}
 		}
-		if eaq.withCompany != nil {
+		if eaq.withEmployee != nil {
 			_spec.Node.AddColumnOnce(employeeaddress.FieldEmployeeID)
 		}
 		if eaq.withAddress != nil {

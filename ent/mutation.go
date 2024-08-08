@@ -2408,17 +2408,17 @@ func (m *EmployeeMutation) ResetEdge(name string) error {
 // EmployeeAddressMutation represents an operation that mutates the EmployeeAddress nodes in the graph.
 type EmployeeAddressMutation struct {
 	config
-	op             Op
-	typ            string
-	id             *int
-	clearedFields  map[string]struct{}
-	company        *int
-	clearedcompany bool
-	address        *int
-	clearedaddress bool
-	done           bool
-	oldValue       func(context.Context) (*EmployeeAddress, error)
-	predicates     []predicate.EmployeeAddress
+	op              Op
+	typ             string
+	id              *int
+	clearedFields   map[string]struct{}
+	employee        *int
+	clearedemployee bool
+	address         *int
+	clearedaddress  bool
+	done            bool
+	oldValue        func(context.Context) (*EmployeeAddress, error)
+	predicates      []predicate.EmployeeAddress
 }
 
 var _ ent.Mutation = (*EmployeeAddressMutation)(nil)
@@ -2521,12 +2521,12 @@ func (m *EmployeeAddressMutation) IDs(ctx context.Context) ([]int, error) {
 
 // SetEmployeeID sets the "employee_id" field.
 func (m *EmployeeAddressMutation) SetEmployeeID(i int) {
-	m.company = &i
+	m.employee = &i
 }
 
 // EmployeeID returns the value of the "employee_id" field in the mutation.
 func (m *EmployeeAddressMutation) EmployeeID() (r int, exists bool) {
-	v := m.company
+	v := m.employee
 	if v == nil {
 		return
 	}
@@ -2552,7 +2552,7 @@ func (m *EmployeeAddressMutation) OldEmployeeID(ctx context.Context) (v int, err
 
 // ResetEmployeeID resets all changes to the "employee_id" field.
 func (m *EmployeeAddressMutation) ResetEmployeeID() {
-	m.company = nil
+	m.employee = nil
 }
 
 // SetAddressID sets the "address_id" field.
@@ -2591,44 +2591,31 @@ func (m *EmployeeAddressMutation) ResetAddressID() {
 	m.address = nil
 }
 
-// SetCompanyID sets the "company" edge to the Company entity by id.
-func (m *EmployeeAddressMutation) SetCompanyID(id int) {
-	m.company = &id
-}
-
-// ClearCompany clears the "company" edge to the Company entity.
-func (m *EmployeeAddressMutation) ClearCompany() {
-	m.clearedcompany = true
+// ClearEmployee clears the "employee" edge to the Employee entity.
+func (m *EmployeeAddressMutation) ClearEmployee() {
+	m.clearedemployee = true
 	m.clearedFields[employeeaddress.FieldEmployeeID] = struct{}{}
 }
 
-// CompanyCleared reports if the "company" edge to the Company entity was cleared.
-func (m *EmployeeAddressMutation) CompanyCleared() bool {
-	return m.clearedcompany
+// EmployeeCleared reports if the "employee" edge to the Employee entity was cleared.
+func (m *EmployeeAddressMutation) EmployeeCleared() bool {
+	return m.clearedemployee
 }
 
-// CompanyID returns the "company" edge ID in the mutation.
-func (m *EmployeeAddressMutation) CompanyID() (id int, exists bool) {
-	if m.company != nil {
-		return *m.company, true
-	}
-	return
-}
-
-// CompanyIDs returns the "company" edge IDs in the mutation.
+// EmployeeIDs returns the "employee" edge IDs in the mutation.
 // Note that IDs always returns len(IDs) <= 1 for unique edges, and you should use
-// CompanyID instead. It exists only for internal usage by the builders.
-func (m *EmployeeAddressMutation) CompanyIDs() (ids []int) {
-	if id := m.company; id != nil {
+// EmployeeID instead. It exists only for internal usage by the builders.
+func (m *EmployeeAddressMutation) EmployeeIDs() (ids []int) {
+	if id := m.employee; id != nil {
 		ids = append(ids, *id)
 	}
 	return
 }
 
-// ResetCompany resets all changes to the "company" edge.
-func (m *EmployeeAddressMutation) ResetCompany() {
-	m.company = nil
-	m.clearedcompany = false
+// ResetEmployee resets all changes to the "employee" edge.
+func (m *EmployeeAddressMutation) ResetEmployee() {
+	m.employee = nil
+	m.clearedemployee = false
 }
 
 // ClearAddress clears the "address" edge to the Address entity.
@@ -2693,7 +2680,7 @@ func (m *EmployeeAddressMutation) Type() string {
 // AddedFields().
 func (m *EmployeeAddressMutation) Fields() []string {
 	fields := make([]string, 0, 2)
-	if m.company != nil {
+	if m.employee != nil {
 		fields = append(fields, employeeaddress.FieldEmployeeID)
 	}
 	if m.address != nil {
@@ -2812,8 +2799,8 @@ func (m *EmployeeAddressMutation) ResetField(name string) error {
 // AddedEdges returns all edge names that were set/added in this mutation.
 func (m *EmployeeAddressMutation) AddedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.company != nil {
-		edges = append(edges, employeeaddress.EdgeCompany)
+	if m.employee != nil {
+		edges = append(edges, employeeaddress.EdgeEmployee)
 	}
 	if m.address != nil {
 		edges = append(edges, employeeaddress.EdgeAddress)
@@ -2825,8 +2812,8 @@ func (m *EmployeeAddressMutation) AddedEdges() []string {
 // name in this mutation.
 func (m *EmployeeAddressMutation) AddedIDs(name string) []ent.Value {
 	switch name {
-	case employeeaddress.EdgeCompany:
-		if id := m.company; id != nil {
+	case employeeaddress.EdgeEmployee:
+		if id := m.employee; id != nil {
 			return []ent.Value{*id}
 		}
 	case employeeaddress.EdgeAddress:
@@ -2852,8 +2839,8 @@ func (m *EmployeeAddressMutation) RemovedIDs(name string) []ent.Value {
 // ClearedEdges returns all edge names that were cleared in this mutation.
 func (m *EmployeeAddressMutation) ClearedEdges() []string {
 	edges := make([]string, 0, 2)
-	if m.clearedcompany {
-		edges = append(edges, employeeaddress.EdgeCompany)
+	if m.clearedemployee {
+		edges = append(edges, employeeaddress.EdgeEmployee)
 	}
 	if m.clearedaddress {
 		edges = append(edges, employeeaddress.EdgeAddress)
@@ -2865,8 +2852,8 @@ func (m *EmployeeAddressMutation) ClearedEdges() []string {
 // was cleared in this mutation.
 func (m *EmployeeAddressMutation) EdgeCleared(name string) bool {
 	switch name {
-	case employeeaddress.EdgeCompany:
-		return m.clearedcompany
+	case employeeaddress.EdgeEmployee:
+		return m.clearedemployee
 	case employeeaddress.EdgeAddress:
 		return m.clearedaddress
 	}
@@ -2877,8 +2864,8 @@ func (m *EmployeeAddressMutation) EdgeCleared(name string) bool {
 // if that edge is not defined in the schema.
 func (m *EmployeeAddressMutation) ClearEdge(name string) error {
 	switch name {
-	case employeeaddress.EdgeCompany:
-		m.ClearCompany()
+	case employeeaddress.EdgeEmployee:
+		m.ClearEmployee()
 		return nil
 	case employeeaddress.EdgeAddress:
 		m.ClearAddress()
@@ -2891,8 +2878,8 @@ func (m *EmployeeAddressMutation) ClearEdge(name string) error {
 // It returns an error if the edge is not defined in the schema.
 func (m *EmployeeAddressMutation) ResetEdge(name string) error {
 	switch name {
-	case employeeaddress.EdgeCompany:
-		m.ResetCompany()
+	case employeeaddress.EdgeEmployee:
+		m.ResetEmployee()
 		return nil
 	case employeeaddress.EdgeAddress:
 		m.ResetAddress()

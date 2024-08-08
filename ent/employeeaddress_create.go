@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	"entgo.io/bug/ent/address"
-	"entgo.io/bug/ent/company"
+	"entgo.io/bug/ent/employee"
 	"entgo.io/bug/ent/employeeaddress"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
@@ -33,15 +33,9 @@ func (eac *EmployeeAddressCreate) SetAddressID(i int) *EmployeeAddressCreate {
 	return eac
 }
 
-// SetCompanyID sets the "company" edge to the Company entity by ID.
-func (eac *EmployeeAddressCreate) SetCompanyID(id int) *EmployeeAddressCreate {
-	eac.mutation.SetCompanyID(id)
-	return eac
-}
-
-// SetCompany sets the "company" edge to the Company entity.
-func (eac *EmployeeAddressCreate) SetCompany(c *Company) *EmployeeAddressCreate {
-	return eac.SetCompanyID(c.ID)
+// SetEmployee sets the "employee" edge to the Employee entity.
+func (eac *EmployeeAddressCreate) SetEmployee(e *Employee) *EmployeeAddressCreate {
+	return eac.SetEmployeeID(e.ID)
 }
 
 // SetAddress sets the "address" edge to the Address entity.
@@ -89,8 +83,8 @@ func (eac *EmployeeAddressCreate) check() error {
 	if _, ok := eac.mutation.AddressID(); !ok {
 		return &ValidationError{Name: "address_id", err: errors.New(`ent: missing required field "EmployeeAddress.address_id"`)}
 	}
-	if len(eac.mutation.CompanyIDs()) == 0 {
-		return &ValidationError{Name: "company", err: errors.New(`ent: missing required edge "EmployeeAddress.company"`)}
+	if len(eac.mutation.EmployeeIDs()) == 0 {
+		return &ValidationError{Name: "employee", err: errors.New(`ent: missing required edge "EmployeeAddress.employee"`)}
 	}
 	if len(eac.mutation.AddressIDs()) == 0 {
 		return &ValidationError{Name: "address", err: errors.New(`ent: missing required edge "EmployeeAddress.address"`)}
@@ -121,15 +115,15 @@ func (eac *EmployeeAddressCreate) createSpec() (*EmployeeAddress, *sqlgraph.Crea
 		_node = &EmployeeAddress{config: eac.config}
 		_spec = sqlgraph.NewCreateSpec(employeeaddress.Table, sqlgraph.NewFieldSpec(employeeaddress.FieldID, field.TypeInt))
 	)
-	if nodes := eac.mutation.CompanyIDs(); len(nodes) > 0 {
+	if nodes := eac.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   employeeaddress.CompanyTable,
-			Columns: []string{employeeaddress.CompanyColumn},
+			Table:   employeeaddress.EmployeeTable,
+			Columns: []string{employeeaddress.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(company.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(employee.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

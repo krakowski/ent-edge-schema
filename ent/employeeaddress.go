@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"entgo.io/bug/ent/address"
-	"entgo.io/bug/ent/company"
+	"entgo.io/bug/ent/employee"
 	"entgo.io/bug/ent/employeeaddress"
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
@@ -30,8 +30,8 @@ type EmployeeAddress struct {
 
 // EmployeeAddressEdges holds the relations/edges for other nodes in the graph.
 type EmployeeAddressEdges struct {
-	// Company holds the value of the company edge.
-	Company *Company `json:"company,omitempty"`
+	// Employee holds the value of the employee edge.
+	Employee *Employee `json:"employee,omitempty"`
 	// Address holds the value of the address edge.
 	Address *Address `json:"address,omitempty"`
 	// loadedTypes holds the information for reporting if a
@@ -39,15 +39,15 @@ type EmployeeAddressEdges struct {
 	loadedTypes [2]bool
 }
 
-// CompanyOrErr returns the Company value or an error if the edge
+// EmployeeOrErr returns the Employee value or an error if the edge
 // was not loaded in eager-loading, or loaded but was not found.
-func (e EmployeeAddressEdges) CompanyOrErr() (*Company, error) {
-	if e.Company != nil {
-		return e.Company, nil
+func (e EmployeeAddressEdges) EmployeeOrErr() (*Employee, error) {
+	if e.Employee != nil {
+		return e.Employee, nil
 	} else if e.loadedTypes[0] {
-		return nil, &NotFoundError{label: company.Label}
+		return nil, &NotFoundError{label: employee.Label}
 	}
-	return nil, &NotLoadedError{edge: "company"}
+	return nil, &NotLoadedError{edge: "employee"}
 }
 
 // AddressOrErr returns the Address value or an error if the edge
@@ -114,9 +114,9 @@ func (ea *EmployeeAddress) Value(name string) (ent.Value, error) {
 	return ea.selectValues.Get(name)
 }
 
-// QueryCompany queries the "company" edge of the EmployeeAddress entity.
-func (ea *EmployeeAddress) QueryCompany() *CompanyQuery {
-	return NewEmployeeAddressClient(ea.config).QueryCompany(ea)
+// QueryEmployee queries the "employee" edge of the EmployeeAddress entity.
+func (ea *EmployeeAddress) QueryEmployee() *EmployeeQuery {
+	return NewEmployeeAddressClient(ea.config).QueryEmployee(ea)
 }
 
 // QueryAddress queries the "address" edge of the EmployeeAddress entity.

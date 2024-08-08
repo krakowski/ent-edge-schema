@@ -103,21 +103,21 @@ func AddressIDNotIn(vs ...int) predicate.EmployeeAddress {
 	return predicate.EmployeeAddress(sql.FieldNotIn(FieldAddressID, vs...))
 }
 
-// HasCompany applies the HasEdge predicate on the "company" edge.
-func HasCompany() predicate.EmployeeAddress {
+// HasEmployee applies the HasEdge predicate on the "employee" edge.
+func HasEmployee() predicate.EmployeeAddress {
 	return predicate.EmployeeAddress(func(s *sql.Selector) {
 		step := sqlgraph.NewStep(
 			sqlgraph.From(Table, FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, CompanyTable, CompanyColumn),
+			sqlgraph.Edge(sqlgraph.M2O, false, EmployeeTable, EmployeeColumn),
 		)
 		sqlgraph.HasNeighbors(s, step)
 	})
 }
 
-// HasCompanyWith applies the HasEdge predicate on the "company" edge with a given conditions (other predicates).
-func HasCompanyWith(preds ...predicate.Company) predicate.EmployeeAddress {
+// HasEmployeeWith applies the HasEdge predicate on the "employee" edge with a given conditions (other predicates).
+func HasEmployeeWith(preds ...predicate.Employee) predicate.EmployeeAddress {
 	return predicate.EmployeeAddress(func(s *sql.Selector) {
-		step := newCompanyStep()
+		step := newEmployeeStep()
 		sqlgraph.HasNeighborsWith(s, step, func(s *sql.Selector) {
 			for _, p := range preds {
 				p(s)

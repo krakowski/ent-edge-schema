@@ -1037,15 +1037,15 @@ func (c *EmployeeAddressClient) GetX(ctx context.Context, id int) *EmployeeAddre
 	return obj
 }
 
-// QueryCompany queries the company edge of a EmployeeAddress.
-func (c *EmployeeAddressClient) QueryCompany(ea *EmployeeAddress) *CompanyQuery {
-	query := (&CompanyClient{config: c.config}).Query()
+// QueryEmployee queries the employee edge of a EmployeeAddress.
+func (c *EmployeeAddressClient) QueryEmployee(ea *EmployeeAddress) *EmployeeQuery {
+	query := (&EmployeeClient{config: c.config}).Query()
 	query.path = func(context.Context) (fromV *sql.Selector, _ error) {
 		id := ea.ID
 		step := sqlgraph.NewStep(
 			sqlgraph.From(employeeaddress.Table, employeeaddress.FieldID, id),
-			sqlgraph.To(company.Table, company.FieldID),
-			sqlgraph.Edge(sqlgraph.M2O, false, employeeaddress.CompanyTable, employeeaddress.CompanyColumn),
+			sqlgraph.To(employee.Table, employee.FieldID),
+			sqlgraph.Edge(sqlgraph.M2O, false, employeeaddress.EmployeeTable, employeeaddress.EmployeeColumn),
 		)
 		fromV = sqlgraph.Neighbors(ea.driver.Dialect(), step)
 		return fromV, nil

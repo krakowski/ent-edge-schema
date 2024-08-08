@@ -8,7 +8,7 @@ import (
 	"fmt"
 
 	"entgo.io/bug/ent/address"
-	"entgo.io/bug/ent/company"
+	"entgo.io/bug/ent/employee"
 	"entgo.io/bug/ent/employeeaddress"
 	"entgo.io/bug/ent/predicate"
 	"entgo.io/ent/dialect/sql"
@@ -57,15 +57,9 @@ func (eau *EmployeeAddressUpdate) SetNillableAddressID(i *int) *EmployeeAddressU
 	return eau
 }
 
-// SetCompanyID sets the "company" edge to the Company entity by ID.
-func (eau *EmployeeAddressUpdate) SetCompanyID(id int) *EmployeeAddressUpdate {
-	eau.mutation.SetCompanyID(id)
-	return eau
-}
-
-// SetCompany sets the "company" edge to the Company entity.
-func (eau *EmployeeAddressUpdate) SetCompany(c *Company) *EmployeeAddressUpdate {
-	return eau.SetCompanyID(c.ID)
+// SetEmployee sets the "employee" edge to the Employee entity.
+func (eau *EmployeeAddressUpdate) SetEmployee(e *Employee) *EmployeeAddressUpdate {
+	return eau.SetEmployeeID(e.ID)
 }
 
 // SetAddress sets the "address" edge to the Address entity.
@@ -78,9 +72,9 @@ func (eau *EmployeeAddressUpdate) Mutation() *EmployeeAddressMutation {
 	return eau.mutation
 }
 
-// ClearCompany clears the "company" edge to the Company entity.
-func (eau *EmployeeAddressUpdate) ClearCompany() *EmployeeAddressUpdate {
-	eau.mutation.ClearCompany()
+// ClearEmployee clears the "employee" edge to the Employee entity.
+func (eau *EmployeeAddressUpdate) ClearEmployee() *EmployeeAddressUpdate {
+	eau.mutation.ClearEmployee()
 	return eau
 }
 
@@ -119,8 +113,8 @@ func (eau *EmployeeAddressUpdate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (eau *EmployeeAddressUpdate) check() error {
-	if eau.mutation.CompanyCleared() && len(eau.mutation.CompanyIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "EmployeeAddress.company"`)
+	if eau.mutation.EmployeeCleared() && len(eau.mutation.EmployeeIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "EmployeeAddress.employee"`)
 	}
 	if eau.mutation.AddressCleared() && len(eau.mutation.AddressIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "EmployeeAddress.address"`)
@@ -140,28 +134,28 @@ func (eau *EmployeeAddressUpdate) sqlSave(ctx context.Context) (n int, err error
 			}
 		}
 	}
-	if eau.mutation.CompanyCleared() {
+	if eau.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   employeeaddress.CompanyTable,
-			Columns: []string{employeeaddress.CompanyColumn},
+			Table:   employeeaddress.EmployeeTable,
+			Columns: []string{employeeaddress.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(company.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(employee.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eau.mutation.CompanyIDs(); len(nodes) > 0 {
+	if nodes := eau.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   employeeaddress.CompanyTable,
-			Columns: []string{employeeaddress.CompanyColumn},
+			Table:   employeeaddress.EmployeeTable,
+			Columns: []string{employeeaddress.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(company.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(employee.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {
@@ -246,15 +240,9 @@ func (eauo *EmployeeAddressUpdateOne) SetNillableAddressID(i *int) *EmployeeAddr
 	return eauo
 }
 
-// SetCompanyID sets the "company" edge to the Company entity by ID.
-func (eauo *EmployeeAddressUpdateOne) SetCompanyID(id int) *EmployeeAddressUpdateOne {
-	eauo.mutation.SetCompanyID(id)
-	return eauo
-}
-
-// SetCompany sets the "company" edge to the Company entity.
-func (eauo *EmployeeAddressUpdateOne) SetCompany(c *Company) *EmployeeAddressUpdateOne {
-	return eauo.SetCompanyID(c.ID)
+// SetEmployee sets the "employee" edge to the Employee entity.
+func (eauo *EmployeeAddressUpdateOne) SetEmployee(e *Employee) *EmployeeAddressUpdateOne {
+	return eauo.SetEmployeeID(e.ID)
 }
 
 // SetAddress sets the "address" edge to the Address entity.
@@ -267,9 +255,9 @@ func (eauo *EmployeeAddressUpdateOne) Mutation() *EmployeeAddressMutation {
 	return eauo.mutation
 }
 
-// ClearCompany clears the "company" edge to the Company entity.
-func (eauo *EmployeeAddressUpdateOne) ClearCompany() *EmployeeAddressUpdateOne {
-	eauo.mutation.ClearCompany()
+// ClearEmployee clears the "employee" edge to the Employee entity.
+func (eauo *EmployeeAddressUpdateOne) ClearEmployee() *EmployeeAddressUpdateOne {
+	eauo.mutation.ClearEmployee()
 	return eauo
 }
 
@@ -321,8 +309,8 @@ func (eauo *EmployeeAddressUpdateOne) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (eauo *EmployeeAddressUpdateOne) check() error {
-	if eauo.mutation.CompanyCleared() && len(eauo.mutation.CompanyIDs()) > 0 {
-		return errors.New(`ent: clearing a required unique edge "EmployeeAddress.company"`)
+	if eauo.mutation.EmployeeCleared() && len(eauo.mutation.EmployeeIDs()) > 0 {
+		return errors.New(`ent: clearing a required unique edge "EmployeeAddress.employee"`)
 	}
 	if eauo.mutation.AddressCleared() && len(eauo.mutation.AddressIDs()) > 0 {
 		return errors.New(`ent: clearing a required unique edge "EmployeeAddress.address"`)
@@ -359,28 +347,28 @@ func (eauo *EmployeeAddressUpdateOne) sqlSave(ctx context.Context) (_node *Emplo
 			}
 		}
 	}
-	if eauo.mutation.CompanyCleared() {
+	if eauo.mutation.EmployeeCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   employeeaddress.CompanyTable,
-			Columns: []string{employeeaddress.CompanyColumn},
+			Table:   employeeaddress.EmployeeTable,
+			Columns: []string{employeeaddress.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(company.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(employee.FieldID, field.TypeInt),
 			},
 		}
 		_spec.Edges.Clear = append(_spec.Edges.Clear, edge)
 	}
-	if nodes := eauo.mutation.CompanyIDs(); len(nodes) > 0 {
+	if nodes := eauo.mutation.EmployeeIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
 			Inverse: false,
-			Table:   employeeaddress.CompanyTable,
-			Columns: []string{employeeaddress.CompanyColumn},
+			Table:   employeeaddress.EmployeeTable,
+			Columns: []string{employeeaddress.EmployeeColumn},
 			Bidi:    false,
 			Target: &sqlgraph.EdgeTarget{
-				IDSpec: sqlgraph.NewFieldSpec(company.FieldID, field.TypeInt),
+				IDSpec: sqlgraph.NewFieldSpec(employee.FieldID, field.TypeInt),
 			},
 		}
 		for _, k := range nodes {

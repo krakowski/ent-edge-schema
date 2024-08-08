@@ -20,7 +20,7 @@ func (EmployeeAddress) Fields() []ent.Field {
 
 func (EmployeeAddress) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("company", Company.Type).
+		edge.To("employee", Employee.Type).
 			Unique().
 			Required().
 			Field("employee_id"),

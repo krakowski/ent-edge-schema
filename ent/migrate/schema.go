@@ -96,9 +96,9 @@ var (
 		PrimaryKey: []*schema.Column{EmployeeAddressesColumns[0]},
 		ForeignKeys: []*schema.ForeignKey{
 			{
-				Symbol:     "employee_addresses_companies_company",
+				Symbol:     "employee_addresses_employees_employee",
 				Columns:    []*schema.Column{EmployeeAddressesColumns[1]},
-				RefColumns: []*schema.Column{CompaniesColumns[0]},
+				RefColumns: []*schema.Column{EmployeesColumns[0]},
 				OnDelete:   schema.NoAction,
 			},
 			{
@@ -134,6 +134,6 @@ var (
 func init() {
 	CompanyAddressesTable.ForeignKeys[0].RefTable = CompaniesTable
 	CompanyAddressesTable.ForeignKeys[1].RefTable = AddressesTable
-	EmployeeAddressesTable.ForeignKeys[0].RefTable = CompaniesTable
+	EmployeeAddressesTable.ForeignKeys[0].RefTable = EmployeesTable
 	EmployeeAddressesTable.ForeignKeys[1].RefTable = AddressesTable
 }

@@ -16,19 +16,19 @@ const (
 	FieldEmployeeID = "employee_id"
 	// FieldAddressID holds the string denoting the address_id field in the database.
 	FieldAddressID = "address_id"
-	// EdgeCompany holds the string denoting the company edge name in mutations.
-	EdgeCompany = "company"
+	// EdgeEmployee holds the string denoting the employee edge name in mutations.
+	EdgeEmployee = "employee"
 	// EdgeAddress holds the string denoting the address edge name in mutations.
 	EdgeAddress = "address"
 	// Table holds the table name of the employeeaddress in the database.
 	Table = "employee_addresses"
-	// CompanyTable is the table that holds the company relation/edge.
-	CompanyTable = "employee_addresses"
-	// CompanyInverseTable is the table name for the Company entity.
-	// It exists in this package in order to avoid circular dependency with the "company" package.
-	CompanyInverseTable = "companies"
-	// CompanyColumn is the table column denoting the company relation/edge.
-	CompanyColumn = "employee_id"
+	// EmployeeTable is the table that holds the employee relation/edge.
+	EmployeeTable = "employee_addresses"
+	// EmployeeInverseTable is the table name for the Employee entity.
+	// It exists in this package in order to avoid circular dependency with the "employee" package.
+	EmployeeInverseTable = "employees"
+	// EmployeeColumn is the table column denoting the employee relation/edge.
+	EmployeeColumn = "employee_id"
 	// AddressTable is the table that holds the address relation/edge.
 	AddressTable = "employee_addresses"
 	// AddressInverseTable is the table name for the Address entity.
@@ -73,10 +73,10 @@ func ByAddressID(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldAddressID, opts...).ToFunc()
 }
 
-// ByCompanyField orders the results by company field.
-func ByCompanyField(field string, opts ...sql.OrderTermOption) OrderOption {
+// ByEmployeeField orders the results by employee field.
+func ByEmployeeField(field string, opts ...sql.OrderTermOption) OrderOption {
 	return func(s *sql.Selector) {
-		sqlgraph.OrderByNeighborTerms(s, newCompanyStep(), sql.OrderByField(field, opts...))
+		sqlgraph.OrderByNeighborTerms(s, newEmployeeStep(), sql.OrderByField(field, opts...))
 	}
 }
 
@@ -86,11 +86,11 @@ func ByAddressField(field string, opts ...sql.OrderTermOption) OrderOption {
 		sqlgraph.OrderByNeighborTerms(s, newAddressStep(), sql.OrderByField(field, opts...))
 	}
 }
-func newCompanyStep() *sqlgraph.Step {
+func newEmployeeStep() *sqlgraph.Step {
 	return sqlgraph.NewStep(
 		sqlgraph.From(Table, FieldID),
-		sqlgraph.To(CompanyInverseTable, FieldID),
-		sqlgraph.Edge(sqlgraph.M2O, false, CompanyTable, CompanyColumn),
+		sqlgraph.To(EmployeeInverseTable, FieldID),
+		sqlgraph.Edge(sqlgraph.M2O, false, EmployeeTable, EmployeeColumn),
 	)
 }
 func newAddressStep() *sqlgraph.Step {
